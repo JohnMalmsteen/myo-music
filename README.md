@@ -32,6 +32,7 @@ The gesures used in the app are as follows:
 * Spread Fingers: Spreading your fingers will stop notes from playing (this is dependent on the instrument type as some seem to have infinite fade out)
 * Wave In: This will drop the notes available by 1 octave (on the store version I have it dropping it only a semi tone so that all keys are accessible)
 * Wave Out: This operates just as the Wave In gesture except it raises the available notes rather than drops them
+* Vibration feedback: there is haptic feedback when the user changes the octave (wave in and out gestures) as I found it was easy to do by accident, I opted for a medium vibration when the notes go up and a short one when the notes go down
 
 4 - Hardware
 ---
