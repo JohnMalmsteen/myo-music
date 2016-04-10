@@ -3,9 +3,7 @@ scriptTitle = "Myo Garageband Midi Controller"
 
 myo.setLockingPolicy("none")
 
-myoMinPitch = 0;
-myoMaxPitch = math.pi;
-myoPitchRange = myoMaxPitch - myoMinPitch;
+myoPitchRange = math.pi
 
 scaleNotes = {}
 
@@ -48,10 +46,12 @@ function onPoseEdge(pose, edge)
       myo.midi(1, "noteOff", var, 127)
     end
   elseif (pose == "waveIn") then
+    myo.vibrate("short")
     for var=0, 21 do
       scaleNotes[var] = scaleNotes[var] - 12
     end
   elseif (pose == "waveOut") then
+    myo.vibrate("medium")
     for var=0, 21 do
       scaleNotes[var] = scaleNotes[var] + 12
     end
@@ -60,7 +60,7 @@ end
 
 function onPeriodic()
   local inputAngle = myo.getPitch() + math.pi / 2;
-  local pitch = (((inputAngle - myoMinPitch) * newRange) / myoPitchRange) - 1;
+  local pitch = ((inputAngle * newRange) / myoPitchRange) - 1;
   if pitch < 0 then
     pitch = 0
   end
