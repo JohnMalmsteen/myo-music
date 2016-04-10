@@ -1,12 +1,20 @@
 scriptId = 'com.thalmic.schemes.myomidi'
 scriptTitle = "Myo Garageband Midi Controller"
 
+-- Setting so that there is no locking in the application,
+-- Found that it was getting locked by accident all the time
 myo.setLockingPolicy("none")
 
+-- Pitch range is from 0 (arm straight down) to 180 (straight up) ie Pi radians
 myoPitchRange = math.pi
 
+-- setting up my array of scale locked notes,
+-- here I have chosen the D Natural Minor (Aeolian Mode)
 scaleNotes = {}
 
+-- note that the Aeolian mode of D is the same note set as
+-- the F Major (Ionian) as they are diatonic scales
+-- here I have given 3 octaves, this is just a magic number that worked well while testing
 scaleNotes[0] = 50;
 scaleNotes[1] = 52;
 scaleNotes[2] = 53;
@@ -30,48 +38,53 @@ scaleNotes[19] = 83;
 scaleNotes[20] = 84;
 scaleNotes[21] = 86;
 
-newMin = 0;
-newMax = 21;
-newRange = newMax - newMin;
+-- just using this since the table.getn() function is throwing errors in the myo debug
+newRange = 21;
 
 playing = false
 
+-- this function deals with the gesture input
 function onPoseEdge(pose, edge)
-  if pose == "fist" then
+  if pose == "fist" then -- for fist gesture, turn on the playing boolean
     playing = true
-  elseif (pose == "fingersSpread") then
+  elseif (pose == "fingersSpread") then -- on fingersSpread gesture turn off the playing bool and turn off all the playing notes
     playing = false
     for var=0,127 do
       myo.midi(1, "noteOff", var, 127)
     end
-  elseif (pose == "waveIn") then
+  elseif (pose == "waveIn") then -- on waveIn it iterates over the scale notes array and decrements the values by 12 (12 = one octave)
     myo.vibrate("short")
     for var=0, 21 do
       scaleNotes[var] = scaleNotes[var] - 12
     end
-  elseif (pose == "waveOut") then
+  elseif (pose == "waveOut") then -- increment by one octave
     myo.vibrate("medium")
     for var=0, 21 do
       scaleNotes[var] = scaleNotes[var] + 12
     end
   end
 end
+-- note: if the values go below 0 or above 127 they max out until you bring them back
+-- to viable values but it shouldn't throw any errors
 
+
+-- this is the constantly called function
 function onPeriodic()
-  local inputAngle = myo.getPitch() + math.pi / 2;
-  local pitch = ((inputAngle * newRange) / myoPitchRange) - 1;
+  local inputAngle = myo.getPitch() + math.pi / 2; -- get the input angle from the hardware and normalise it
+  local pitch = ((inputAngle * newRange) / myoPitchRange) - 1; -- convert the input into the range of the array indices
   if pitch < 0 then
     pitch = 0
   end
   if playing then
-    myo.midi(1, "noteOn", scaleNotes[math.floor(pitch)], 100)
+    myo.midi(1, "noteOn", scaleNotes[math.floor(pitch)], 100) -- send noteOn signal (floor converts from double to int), 100 is the attack velocity of the note
   end
 end
 
-
+-- when garageband is the foreground window activate the application
 function onForegroundWindowChange(app, title)
   return app == "com.apple.garageband10"
 end
+
 
 function onUnlock()
   myo.unlock("hold")
