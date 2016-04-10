@@ -1,5 +1,7 @@
-scriptId = 'com.thalmic.schemes.myotheramin'
-scriptTitle = "Myo Theramin"
+scriptId = 'com.thalmic.schemes.myomidi'
+scriptTitle = "Myo Garageband Midi Controller"
+
+myo.setLockingPolicy("none")
 
 myoMinPitch = 0;
 myoMaxPitch = math.pi;
@@ -39,14 +41,20 @@ playing = false
 function onPoseEdge(pose, edge)
   if pose == "fist" then
     playing = true
-    myo.debug("fist")
   elseif (pose == "fingersSpread") then
     playing = false
-    for var=scaleNotes[0],scaleNotes[newMax] do
-      myo.midi(1, "noteOff", var, 0)
+    myo.debug("noteOff")
+    for var=0,127 do
+      myo.midi(1, "noteOff", var, 127)
     end
-  elseif (pose == "doubleTap") then
-    myo.lock()
+  elseif (pose == "waveIn") then
+    for var=0, 21 do
+      scaleNotes[var] = scaleNotes[var] - 12
+    end
+  elseif (pose == "waveOut") then
+    for var=0, 21 do
+      scaleNotes[var] = scaleNotes[var] + 12
+    end
   end
 end
 
@@ -56,9 +64,7 @@ function onPeriodic()
   if pitch < 0 then
     pitch = 0
   end
-  myo.debug(pitch)
   if playing then
-    myo.debug("playing")
     myo.midi(1, "noteOn", scaleNotes[math.floor(pitch)], 100)
   end
 end
