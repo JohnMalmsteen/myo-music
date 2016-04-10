@@ -37,13 +37,13 @@ newRange = newMax - newMin;
 playing = false
 
 function onPoseEdge(pose, edge)
-  if pose == "fingersSpread" then
-    playing = (edge == "on")
-    myo.debug("fingersSpread")
-    if edge == "off" then
-      for var=scaleNotes[0],scaleNotes[newMax] do
-        myo.midi(1, "noteOff", var, 127)
-      end
+  if pose == "fist" then
+    playing = true
+    myo.debug("fist")
+  elseif (pose == "fingersSpread") then
+    playing = false
+    for var=scaleNotes[0],scaleNotes[newMax] do
+      myo.midi(1, "noteOff", var, 0)
     end
   elseif (pose == "doubleTap") then
     myo.lock()
