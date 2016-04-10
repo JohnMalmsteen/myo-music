@@ -1,5 +1,5 @@
-scriptId = 'com.thalmic.schemes.myotheramin'
-scriptTitle = "Myo Theramin"
+scriptId = 'com.thalmic.schemes.myomusic'
+scriptTitle = "Myo Music"
 
 myoMinPitch = 0;
 myoMaxPitch = math.pi;
@@ -40,7 +40,7 @@ function onPoseEdge(pose, edge)
   if pose == "fingersSpread" then
     playing = (edge == "on")
     if edge == "off" then
-      for var=0,newMax do
+      for var=scaleNotes[0],scaleNotes[newMax] do
         myo.midi(1, "noteOff", var, 127)
       end
     end

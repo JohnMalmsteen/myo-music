@@ -31,7 +31,7 @@ scaleNotes[20] = 84;
 scaleNotes[21] = 86;
 
 newMin = 0;
-newMax = table.getn(scaleNotes);
+newMax = 21;
 newRange = newMax - newMin;
 
 playing = false
@@ -39,8 +39,9 @@ playing = false
 function onPoseEdge(pose, edge)
   if pose == "fingersSpread" then
     playing = (edge == "on")
+    myo.debug("fingersSpread")
     if edge == "off" then
-      for var=0,newMax do
+      for var=scaleNotes[0],scaleNotes[newMax] do
         myo.midi(1, "noteOff", var, 127)
       end
     end
@@ -51,9 +52,14 @@ end
 
 function onPeriodic()
   local inputAngle = myo.getPitch() + math.pi / 2;
-  local pitch = (((inputAngle - myoMinPitch) * newRange) / myoPitchRange) + newMin;
+  local pitch = (((inputAngle - myoMinPitch) * newRange) / myoPitchRange) - 1;
+  if pitch < 0 then
+    pitch = 0
+  end
+  myo.debug(pitch)
   if playing then
-      myo.midi(1, "noteOn", scaleNotes[pitch], 100)
+    myo.debug("playing")
+    myo.midi(1, "noteOn", scaleNotes[math.floor(pitch)], 100)
   end
 end
 
