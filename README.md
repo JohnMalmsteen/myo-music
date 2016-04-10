@@ -54,3 +54,4 @@ I also found that the Myo has quite noticeable latency on recognising gestures w
 
 Regardless, I found this application to be quite fun to play with and have enjoyed showing it off to friends, so I hope the demonstration goes just as well.
 
+I also tried to get MMC (Midi Machine Control) going so that I could play and stop backing loops or drum beats with gestures but unfortunately this is not supported in GarageBand as I found out [here](https://discussions.apple.com/thread/857305?start=0&tstart=0) since they seem to want to sell their proprietary version the iControl

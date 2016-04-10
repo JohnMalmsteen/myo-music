@@ -38,6 +38,9 @@ scaleNotes[19] = 83;
 scaleNotes[20] = 84;
 scaleNotes[21] = 86;
 
+for var=0, 21 do
+  scaleNotes[var] = scaleNotes[var] + 2
+end
 -- just using this since the table.getn() function is throwing errors in the myo debug
 newRange = 21;
 
@@ -76,7 +79,12 @@ function onPeriodic()
     pitch = 0
   end
   if playing then
-    myo.midi(1, "noteOn", scaleNotes[math.floor(pitch)], 100) -- send noteOn signal (floor converts from double to int), 100 is the attack velocity of the note
+    local note = scaleNotes[math.floor(pitch)]
+    myo.midi(1, "noteOn", note , 100) -- send noteOn signal (floor converts from double to int), 100 is the attack velocity of the note
+
+    -- myo.midi(1, "pitchBend", 8190+(200*myo.getRoll())) this works but doesn't sound good and is hard to control accurately
+    myo.midi(1, "aftertouch", 64+(myo.getRoll()*64))
+
   end
 end
 
