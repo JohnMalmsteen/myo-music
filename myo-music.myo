@@ -41,7 +41,6 @@ function onPoseEdge(pose, edge)
     playing = true
   elseif (pose == "fingersSpread") then
     playing = false
-    myo.debug("noteOff")
     for var=0,127 do
       myo.midi(1, "noteOff", var, 127)
     end
